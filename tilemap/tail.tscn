@@ -1,0 +1,76 @@
+[gd_scene load_steps=7 format=3 uid="uid://chedod7k2yv3b"]
+
+[ext_resource type="Script" path="res://tilemap/animatable_tile.gd" id="1_2nv78"]
+[ext_resource type="Texture2D" uid="uid://bdfl0xp1rfdf8" path="res://snakeanimation.png" id="1_8uob8"]
+
+[sub_resource type="Animation" id="Animation_eb85s"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:region_rect")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Rect2(0, 18, 18, 18)]
+}
+
+[sub_resource type="Animation" id="Animation_yhnou"]
+resource_name = "body-to-tail"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:region_rect")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Rect2(0, 36, 18, 18), Rect2(0, 18, 18, 18)]
+}
+
+[sub_resource type="Animation" id="Animation_6rbyf"]
+resource_name = "tailL-to-empty"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:region_rect")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Rect2(0, 18, 18, 18), Rect2(0, 0, 18, 18)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_gb0i4"]
+_data = {
+"RESET": SubResource("Animation_eb85s"),
+"body-to-tail": SubResource("Animation_yhnou"),
+"tailL-to-empty": SubResource("Animation_6rbyf")
+}
+
+[node name="Snake" type="Node2D" node_paths=PackedStringArray("animationController", "sprite")]
+script = ExtResource("1_2nv78")
+phaseIn = "body-to-tail"
+phaseOut = "tailL-to-empty"
+animationController = NodePath("Sprite2D/anim")
+sprite = NodePath("Sprite2D")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("1_8uob8")
+region_enabled = true
+region_rect = Rect2(0, 18, 18, 18)
+
+[node name="anim" type="AnimationPlayer" parent="Sprite2D"]
+unique_name_in_owner = true
+libraries = {
+"": SubResource("AnimationLibrary_gb0i4")
+}
+autoplay = "RESET"
