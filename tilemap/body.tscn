@@ -1,8 +1,9 @@
-[gd_scene load_steps=8 format=3 uid="uid://chedod7k2yv3b"]
+[gd_scene load_steps=9 format=3 uid="uid://d1t54cs1ny5ee"]
 
-[ext_resource type="Script" path="res://tilemap/animatable_tile.gd" id="1_2nv78"]
-[ext_resource type="Texture2D" uid="uid://bdfl0xp1rfdf8" path="res://snakeanimation.png" id="1_8uob8"]
-[ext_resource type="FontFile" uid="uid://2lbd3k6mxwfu" path="res://RecMonoLinear-Bold-1.085.ttf" id="3_gyu5b"]
+[ext_resource type="Script" path="res://tilemap/animatable_tile.gd" id="1_n6h0h"]
+[ext_resource type="Texture2D" uid="uid://dqsquqvbdjor" path="res://snake.png" id="2_lkq67"]
+[ext_resource type="FontFile" uid="uid://2lbd3k6mxwfu" path="res://RecMonoLinear-Bold-1.085.ttf" id="3_u73kx"]
+[ext_resource type="Script" path="res://tilemap/body_debug.gd" id="4_4mve6"]
 
 [sub_resource type="Animation" id="Animation_eb85s"]
 length = 0.001
@@ -16,11 +17,11 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Rect2(0, 18, 18, 18)]
+"values": [Rect2(36, 36, 18, 18)]
 }
 
-[sub_resource type="Animation" id="Animation_yhnou"]
-resource_name = "body-to-tail"
+[sub_resource type="Animation" id="Animation_cil0j"]
+resource_name = "phaseIn"
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -31,11 +32,11 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Rect2(0, 36, 18, 18), Rect2(0, 18, 18, 18)]
+"values": [Rect2(18, 36, 18, 18), Rect2(36, 36, 18, 18)]
 }
 
-[sub_resource type="Animation" id="Animation_6rbyf"]
-resource_name = "tailL-to-empty"
+[sub_resource type="Animation" id="Animation_7mb76"]
+resource_name = "phaseOut"
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -46,30 +47,30 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Rect2(0, 18, 18, 18), Rect2(0, 0, 18, 18)]
+"values": [Rect2(36, 36, 18, 18), Rect2(18, 36, 18, 18)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_gb0i4"]
 _data = {
 "RESET": SubResource("Animation_eb85s"),
-"body-to-tail": SubResource("Animation_yhnou"),
-"tailL-to-empty": SubResource("Animation_6rbyf")
+"pullDown": SubResource("Animation_cil0j"),
+"pullUp": SubResource("Animation_7mb76")
 }
 
 [node name="Snake" type="Node2D" node_paths=PackedStringArray("animationController", "sprite", "debugNotes")]
-script = ExtResource("1_2nv78")
+script = ExtResource("1_n6h0h")
 animationController = NodePath("Sprite2D/anim")
 sprite = NodePath("Sprite2D")
 debugNotes = NodePath("Label")
-phaseIn = "body-to-tail"
-phaseOut = "tailL-to-empty"
-rotationOffset = -180
+pullDown = "pullUp"
+pullUp = "pullDown"
+rotationOffset = -90
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture_filter = 1
-texture = ExtResource("1_8uob8")
+texture = ExtResource("2_lkq67")
 region_enabled = true
-region_rect = Rect2(0, 18, 18, 18)
+region_rect = Rect2(36, 36, 18, 18)
 
 [node name="anim" type="AnimationPlayer" parent="Sprite2D"]
 unique_name_in_owner = true
@@ -89,6 +90,12 @@ offset_bottom = 74.0
 scale = Vector2(0.08, 0.08)
 tooltip_text = "wefwefw"
 theme_override_colors/font_color = Color(0.892563, 0.000302069, 0.812389, 1)
-theme_override_fonts/font = ExtResource("3_gyu5b")
+theme_override_fonts/font = ExtResource("3_u73kx")
 theme_override_font_sizes/font_size = 64
 text = "hover"
+
+[node name="Button" type="Button" parent="."]
+visible = false
+offset_right = 8.0
+offset_bottom = 8.0
+script = ExtResource("4_4mve6")
